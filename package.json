@@ -19,11 +19,11 @@
       "output": "dist"
     },
     "files": [
-      "out/**/*",
-      ".env"
+      "out/**/*"
     ],
     "extraResources": [
-      { "from": "resources/icon.png", "to": "icon.png" }
+      { "from": "resources/icon.png", "to": "icon.png" },
+      { "from": ".env", "to": ".env" }
     ],
     "win": {
       "target": "nsis",

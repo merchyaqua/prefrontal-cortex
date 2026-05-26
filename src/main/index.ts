@@ -1,6 +1,11 @@
-import 'dotenv/config'
 import { app, BrowserWindow, globalShortcut, ipcMain, shell, Tray, Menu, nativeImage } from 'electron'
 import { join } from 'node:path'
+import { config as dotenvConfig } from 'dotenv'
+
+// In production the .env is an extraResource placed next to the app bundle
+dotenvConfig({
+  path: app.isPackaged ? join(process.resourcesPath, '.env') : join(__dirname, '../../../.env')
+})
 import { IPC } from '../shared/ipc'
 import { getActiveWindow } from './ipc/focus'
 import { registerDbHandlers } from './ipc/db'
