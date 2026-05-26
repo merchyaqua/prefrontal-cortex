@@ -1,11 +1,29 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, shell, Tray, Menu, nativeImage } from 'electron'
 import { join } from 'node:path'
-import { config as dotenvConfig } from 'dotenv'
+import { readFileSync } from 'node:fs'
 
-// In production the .env is an extraResource placed next to the app bundle
-dotenvConfig({
-  path: app.isPackaged ? join(process.resourcesPath, '.env') : join(__dirname, '../../../.env')
-})
+// Parse .env manually — avoids dotenv/dotenvx version quirks.
+// Dev: .env lives two dirs up from out/main/. Production: extraResource at resourcesPath.
+function loadEnv(): void {
+  const envPath = app.isPackaged
+    ? join(process.resourcesPath, '.env')
+    : join(__dirname, '../../.env')
+  try {
+    const lines = readFileSync(envPath, 'utf8').split('\n')
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed || trimmed.startsWith('#')) continue
+      const eq = trimmed.indexOf('=')
+      if (eq === -1) continue
+      const key = trimmed.slice(0, eq).trim()
+      const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '')
+      if (key && !(key in process.env)) process.env[key] = val
+    }
+  } catch {
+    // .env not found — rely on environment variables already set
+  }
+}
+loadEnv()
 import { IPC } from '../shared/ipc'
 import { getActiveWindow } from './ipc/focus'
 import { registerDbHandlers } from './ipc/db'

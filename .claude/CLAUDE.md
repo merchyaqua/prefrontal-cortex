@@ -1,6 +1,6 @@
 This is an Electron React+Framer Motion app.
 
-Always report what you're doing.
+Always report what you're doing. Explain it briefly as if you're a senior software engineer mentoring a CS student.
 After each feature, ask the user to test it sine UX is the core of the project.
 Be mindful of style changes, it should all appear lightweight .
 Don't give any placeholder "how to use" text - the interface itself should guide the user.
